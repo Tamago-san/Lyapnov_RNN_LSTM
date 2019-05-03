@@ -40,9 +40,14 @@ rc_lyapnov=-0.656803
 #set y2range [0:2.2]
 #set yrange [-3.70:-3.67]
 plot "./data_out/lyapnov_end.dat" using 1:2 axis x1y1  with linespoints pt 7 lc 2 lw 2 title "RNN-LYAPNOV"
-replot rc_lyapnov axis x1y1  with lines dt (5,5) lc 2 lw 2 title "RC -LYAPNOV"
+#replot rc_lyapnov axis x1y1  with lines dt (5,5) lc 2 lw 2 title "RC -LYAPNOV"
 replot "./data_out/lyapnov_end.dat" using 1:3 axis x1y2  with linespoints pt 7 lc 15 lw 2 title "RNN-ERROR"
-replot rc_err axis x1y2  with lines dt (5,5) lc 15 lw 2 title "RC -ERROR"
+#replot rc_err axis x1y2  with lines dt (5,5) lc 15 lw 2 title "RC -ERROR"
+
+#plot "./data_image/node010/sample_num/lyapnov_end_01.dat" using 1:2 axis x1y1  with linespoints pt 7 lc 2 lw 2 title "RNN-LYAPNOV"
+#replot rc_lyapnov axis x1y1  with lines dt (5,5) lc 2 lw 2 title "RC -LYAPNOV"
+#replot "./data_image/node010/sample_num/lyapnov_end_01.dat" using 1:3 axis x1y2  with linespoints pt 7 lc 15 lw 2 title "RNN-ERROR"
+#replot rc_err axis x1y2  with lines dt (5,5) lc 15 lw 2 title "RC -ERROR"
 
 #! データをプロットする。
 #! 「axis x1y1」＝左側のY軸を使用して描画

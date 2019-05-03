@@ -26,11 +26,11 @@ module lyapnov
     integer, parameter :: tau =20
     integer, parameter :: rc_step = lyapnov_step * tau
     integer, parameter :: skip_step = 5000
-    integer, parameter :: traning_step = 1000
-    integer, parameter :: sample_num   = 5
+    integer, parameter :: traning_step = 5000
+    integer, parameter :: sample_num   = 1
     integer, parameter :: tr_data_size = traning_step*sample_num
-    integer, parameter :: epoch        = 100
-    integer, parameter :: ly_epoch     = 50
+    integer, parameter :: epoch        = 500
+    integer, parameter :: ly_epoch     = 100
     integer, parameter :: god_step = 0
     integer, parameter :: ly_skip_step = 0
     integer, parameter :: NOW = 2
@@ -39,7 +39,7 @@ module lyapnov
     integer, parameter :: out_node = 1
     real(8), parameter :: G0 = 1.d0
     real(8), parameter :: gusai0 = 0.d0
-    real(8), parameter :: epsi0 =1.d-5
+    real(8), parameter :: epsi0 =1.d-6
     real(8) w_out(rc_node,out_node)
     real(8) w_in (in_node,rc_node)
     real(8) W_rnn(rc_node,rc_node)
@@ -246,7 +246,7 @@ module lyapnov
 
     subroutine Initialization_file
         open(20,file='./data_out/lyapnov.dat',status='replace')
-        open(21,file="tmp.dat",status='replace')
+        open(21,file="./data_out/tmp.dat",status='replace')
 !        open(60,file="tmp2.dat",status='replace')
         open(10,file='./data/output_Runge_Lorenz.dat',status='replace')
         open(22,file="./data_out/rc_out.dat",status='replace')
@@ -320,14 +320,15 @@ implicit none
     real(8) dr(0:tau,1:rc_node)
     real(8) z(0:tau,1:rc_node)
     real(8) G_tmp,av_degree,p,ERR,ERR_ave,iepsi
-    integer step,epsi_adjust
+    integer step,epsi_adjust,itraning_step,isample_num
     integer istep,itau,iG,iepoch,j,k,i,n
-    character(6) :: cist
+    character(6) :: cist,cist2
     
     
-    open(41,file="./data_out/lyapnov_end.dat",status='replace')
-        open(60,file="./data_out/tmp2.dat",status='replace')
-        close(60)
+!    open(41,file="./data_out/lyapnov_end.dat",status='replace')
+
+    open(60,file="./data_out/tmp2.dat",status='replace')
+    close(60)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !■create_dataset
 !-------------------------------------------------
@@ -342,6 +343,11 @@ implicit none
 !    enddo
 !    close(10)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	do isample_num=1,20,1
+    write(cist2,'(i4.4)') isample_num
+    open(41,file="./data_image/node010/sample_num/lyapnov_end_sample."//cist2,status='replace')
+    itraning_step=int(dble(tr_data_size)/dble(isample_num) )
+    
     av_degree=1.d0
     do i=1,rc_node
         do k=1,rc_node
@@ -361,7 +367,7 @@ implicit none
 	w_out(:,:)=1.d-2 *(2.d0*w_out(:,:)-1.d0)
 	iepsi=epsi0
 	
-	
+
     do iepoch=1,ly_epoch
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !■初期化
@@ -390,8 +396,8 @@ implicit none
 !    call rc_traning_own_fortran(in_node,out_node,rc_node,traning_step,tau,gusai0,1.d0,G0,&
 !                    u_tr,s_tr,U_rc,w_in,w_rnn,w_out)
                     
-    call rnn_traning_own_fortran(in_node,out_node,rc_node,traning_step,rc_step,&
-                    sample_num,epoch,iepsi,g0,gusai0,&
+    call rnn_traning_own_fortran(in_node,out_node,rc_node,itraning_step,rc_step,&
+                    isample_num,epoch,iepsi,g0,gusai0,&
                     u_tr,s_tr,u_rc,w_out,w_rnn,w_in)
 
     write(*,*) "=========================================="
@@ -435,7 +441,8 @@ implicit none
         if(mod(istep,nint(lyapnov_step*0.2d0))==0) write(*,*)  "ERR              ====", ERR_ave
         if(mod(istep,nint(lyapnov_step*0.2d0))==0) write(*,*)  "lyapnov_epoch    ====", iepoch
         if(mod(istep,nint(lyapnov_step*0.2d0))==0) write(*,*)  "epsi             ====", iepsi
-        if(mod(istep,nint(lyapnov_step*0.2d0))==0) write(*,*)  "epsi_ad          ====", epsi_adjust
+        if(mod(istep,nint(lyapnov_step*0.2d0))==0) write(*,*)  "isample          ====", isample_num
+        if(mod(istep,nint(lyapnov_step*0.2d0))==0) write(*,*)  "itraning_step    ====", itraning_step
         !write(*,*) "---------------------------------------------------------"
         !write(*,*)  istep ,int(istep*100/lyapnov_step),'%',int(iepoch*100/epoch),'%'
         !write(*,*)  "abs_dr     ====", abs_dr
@@ -457,5 +464,6 @@ implicit none
     close(51)
     enddo
     close(41)
+    enddo
 200 format(a,f15.10)
 end program

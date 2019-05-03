@@ -168,7 +168,7 @@ subroutine rnn_traning_own_fortran(in_node,out_node,rnn_node,traning_step,rnn_st
     !テスト
     !＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
     R_rnn(0,:)=R_tr(traning_step,:)
-    open(60,file="tmp2.dat",position='append')
+    open(60,file="./data_out/tmp2.dat",position='append')
 !    do i=1,sample_num/4
     do j=1,epoch
 !        write(60,*) i,S_tr(i,1),S_tr_data(i,1,sample_num),u_tr_data(i,1,sample_num)
