@@ -326,7 +326,7 @@ implicit none
     
     
     open(41,file="./data_out/lyapnov_end.dat",status='replace')
-        open(60,file="tmp2.dat",status='replace')
+        open(60,file="./data_out/tmp2.dat",status='replace')
         close(60)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !■create_dataset
