@@ -8,8 +8,8 @@ subroutine rnn_traning_own_fortran(in_node,out_node,rnn_node,traning_step,rnn_st
     real(8),    intent(inout) :: w_rnnT(rnn_node,rnn_node)
     real(8),    intent(inout) :: w_inT(in_node,rnn_node)
     
-    real(8),    intent(inout) :: u_tr_data0(in_node,traning_step) !今は一次元、列サイズはトレーニング時間
-    real(8),    intent(inout) :: s_tr_data0(out_node,traning_step)  !出力次元数、列サイズはトレーニング時間
+    real(8),    intent(inout) :: u_tr_data0(traning_step*sample_num,in_node) !今は一次元、列サイズはトレーニング時間
+    real(8),    intent(inout) :: s_tr_data0(traning_step*sample_num,out_node)  !出力次元数、列サイズはトレーニング時間
     real(8),    intent(inout) :: u_rnn(rnn_step,in_node) !今は一次元、列サイズはトレーニング時間
     real(8)     Tre_CH(3,epoch)
     real(8)     u_tr_data(traning_step,in_node,sample_num) !今は一次元、列サイズはトレーニング時間
@@ -40,7 +40,8 @@ subroutine rnn_traning_own_fortran(in_node,out_node,rnn_node,traning_step,rnn_st
     real(8)     Vt_rnn(rnn_node,rnn_node)
     real(8)     Vt_in(rnn_node,in_node)
     integer(4)  i,j ,k,iepo,isample,istep,total_step
-
+    write(*,*) size(u_tr_data0,1)
+    write(*,*) size(u_tr_data0,2)
     call create_test_to_sample(u_tr_data0,u_tr_data,traning_step,in_node )
     call create_test_to_sample(s_tr_data0,s_tr_data,traning_step,out_node)
     call inverse_matrix(W_inT,W_in,in_node,rnn_node)
@@ -124,14 +125,14 @@ subroutine rnn_traning_own_fortran(in_node,out_node,rnn_node,traning_step,rnn_st
 
             enddo
             !更新
-!            call SDM(in_dEdw ,epsi)
-!            call SDM(rnn_dEdw,epsi)
-!            call SDM(out_dEdw,epsi)
+            call SDM(in_dEdw ,epsi)
+            call SDM(rnn_dEdw,epsi)
+            call SDM(out_dEdw,epsi)
             
             
-            call ADAM( in_dEdw,Mt_in ,Vt_in ,alpha,beta1,beta2,ipsi,total_step)
-            call ADAM(rnn_dEdw,Mt_rnn,Vt_rnn,alpha,beta1,beta2,ipsi,total_step)
-            call ADAM(out_dEdw,Mt_out,Vt_out,alpha,beta1,beta2,ipsi,total_step)
+!            call ADAM( in_dEdw,Mt_in ,Vt_in ,alpha,beta1,beta2,ipsi,total_step)
+!            call ADAM(rnn_dEdw,Mt_rnn,Vt_rnn,alpha,beta1,beta2,ipsi,total_step)
+!            call ADAM(out_dEdw,Mt_out,Vt_out,alpha,beta1,beta2,ipsi,total_step)
             
             do i=1,in_node
             do j=1,rnn_node

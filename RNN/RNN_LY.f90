@@ -26,11 +26,11 @@ module lyapnov
     integer, parameter :: tau =20
     integer, parameter :: rc_step = lyapnov_step * tau
     integer, parameter :: skip_step = 5000
-    integer, parameter :: traning_step = 5000
+    integer, parameter :: traning_step = 1000
     integer, parameter :: sample_num   = 5
-    integer, parameter :: epoch        = 100
-    integer, parameter :: ly_epoch     = 100
     integer, parameter :: tr_data_size = traning_step*sample_num
+    integer, parameter :: epoch        = 100
+    integer, parameter :: ly_epoch     = 50
     integer, parameter :: god_step = 0
     integer, parameter :: ly_skip_step = 0
     integer, parameter :: NOW = 2
