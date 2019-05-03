@@ -383,7 +383,7 @@ implicit none
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     open(40,file="./data_out/lyapnov.dat")
     open(30,file="./data_out/rc_out.dat")
-    open(31,file="tmp.dat")
+    open(31,file="./data_out/tmp.dat")
 !■Wout calu
 !-------------------------------------------------
 !    call calu_wout(U_tr,S_tr)
