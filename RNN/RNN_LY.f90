@@ -343,7 +343,7 @@ implicit none
 !    enddo
 !    close(10)
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	do isample_num=1,20,1
+	do isample_num=100,500,100
     write(cist2,'(i4.4)') isample_num
     open(41,file="./data_image/node010/sample_num/lyapnov_end_sample."//cist2,status='replace')
     itraning_step=int(dble(tr_data_size)/dble(isample_num) )
